@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Takdir ve Teşekkür Hesaplayıcı</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1d2671, #c33764);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .kart {
+            width: 900px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .aciklama {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .dersler {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .ders {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .ders label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .ders input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            margin-top: 25px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .sonuc {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="kart">
+
+        <h1>📚 Takdir & Teşekkür Hesaplayıcı</h1>
+
+        <p class="aciklama">
+            Ders notlarını ve haftalık ders saatlerini gir.
+        </p>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="dersler">
+
+                <div class="ders">
+                    <label>Türk Dili ve Edebiyatı</label>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        max="100"
+                        name="turkce_not"
+                        placeholder="Not"
+                        value="{{ request.POST.turkce_not }}"
+                    >
+
+                    <input
+                        type="number"
+                        min="1"
+                        max="99"
+                        name="turkce_saat"
+                        placeholder="Ders saati"
+                        value="{{ request.POST.turkce_saat }}"
+                    >
+                </div>
+
+                <div class="ders">
+                    <label>Matematik</label>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        max="100"
+                        name="matematik_not"
+                        placeholder="Not"
+                        value="{{ request.POST.matematik_not }}"
+                    >
+
+                    <input
+                        type="number"
+                        min="1"
+                        max="99"
+                        name="matematik_saat"
+                        placeholder="Ders saati"
+                        value="{{ request.POST.matematik_saat }}"
+                    >
+                </div>
+
+                <div class="ders">
+                    <label>Fizik</label>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        max="100"
+                        name="fizik_not"
+                        placeholder="Not"
+                        value="{{ request.POST.fizik_not }}"
+                    >
+
+                    <input
+                        type="number"
+                        min="1"
+                        max="99"
+                        name="fizik_saat"
+                        placeholder="Ders saati"
+                        value="{{ request.POST.fizik_saat }}"
+                    >
+                </div>
+
+                <div class="ders">
+                    <label>Kimya</label>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        max="100"
+                        name="kimya_not"
+                        placeholder="Not"
+                        value="{{ request.POST.kimya_not }}"
+                    >
+
+                    <input
+                        type="number"
+                        min="1"
+                        max="99"
+                        name="kimya_saat"
+                        placeholder="Ders saati"
+                        value="{{ request.POST.kimya_saat }}"
+                    >
+                </div>
+
+                <div class="ders">
+                    <label>Biyoloji</label>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        max="100"
+                        name="biyoloji_not"
+                        placeholder="Not"
+                        value="{{ request.POST.biyoloji_not }}"
+                    >
+
+                    <input
+                        type="number"
+                        min="1"
+                        max="99"
+                        name="biyoloji_saat"
+                        placeholder="Ders saati"
+                        value="{{ request.POST.biyoloji_saat }}"
+                    >
+                </div>
+
+                <div class="ders">
+                    <label>Tarih</label>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        max="100"
+                        name="tarih_not"
+                        placeholder="Not"
+                        value="{{ request.POST.tarih_not }}"
+                    >
+
+                    <input
+                        type="number"
+                        min="1"
+                        max="99"
+                        name="tarih_saat"
+                        placeholder="Ders saati"
+                        value="{{ request.POST.tarih_saat }}"
+                    >
+                </div>
+
+                <div class="ders">
+                    <label>Coğrafya</label>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        max="100"
+                        name="cografya_not"
+                        placeholder="Not"
+                        value="{{ request.POST.cografya_not }}"
+    >
+
+    <input
+        type="number"
+        min="1"
+        max="99"
+        name="cografya_saat"
+        placeholder="Ders saati"
+        value="{{ request.POST.cografya_saat }}"
+    >
+</div>
+
+<div class="ders">
+    <label>Felsefe</label>
+
+    <input
+        type="number"
+        step="0.01"
+        min="0"
+        max="100"
+        name="felsefe_not"
+        placeholder="Not"
+        value="{{ request.POST.felsefe_not }}"
+    >
+
+    <input
+        type="number"
+        min="1"
+        max="99"
+        name="felsefe_saat"
+        placeholder="Ders saati"
+        value="{{ request.POST.felsefe_saat }}"
+    >
+</div>
+
+<div class="ders">
+    <label>İngilizce</label>
+
+    <input
+        type="number"
+        step="0.01"
+        min="0"
+        max="100"
+        name="ingilizce_not"
+        placeholder="Not"
+        value="{{ request.POST.ingilizce_not }}"
+    >
+
+    <input
+        type="number"
+        min="1"
+        max="99"
+        name="ingilizce_saat"
+        placeholder="Ders saati"
+        value="{{ request.POST.ingilizce_saat }}"
+    >
+</div>
+
+<div class="ders">
+    <label>Din Kültürü</label>
+
+    <input
+        type="number"
+        step="0.01"
+        min="0"
+        max="100"
+        name="din_not"
+        placeholder="Not"
+        value="{{ request.POST.din_not }}"
+    >
+
+    <input
+        type="number"
+        min="1"
+        max="99"
+        name="din_saat"
+        placeholder="Ders saati"
+        value="{{ request.POST.din_saat }}"
+    >
+</div>
+
+<div class="ders">
+    <label>Beden Eğitimi</label>
+
+    <input
+        type="number"
+        step="0.01"
+        min="0"
+        max="100"
+        name="beden_not"
+        placeholder="Not"
+        value="{{ request.POST.beden_not }}"
+    >
+
+    <input
+        type="number"
+        min="1"
+        max="99"
+        name="beden_saat"
+        placeholder="Ders saati"
+    >
+</div>
+
+<div class="ders">
+    <label>Müzik</label>
+
+    <input
+        type="number"
+        step="0.01"
+        min="0"
+        max="100"
+        name="muzik_not"
+        placeholder="Not"
+        value="{{ request.POST.muzik_not }}"
+    >
+
+    <input
+        type="number"
+        min="1"
+        max="99"
+        name="muzik_saat"
+        placeholder="Ders saati"
+        value="{{ request.POST.muzik_saat }}"
+    >
+</div>
+
+<div class="ders">
+    <label>Görsel Sanatlar</label>
+
+    <input
+        type="number"
+        step="0.01"
+        min="0"
+        max="100"
+        name="gorsel_not"
+        placeholder="Not"
+        value="{{ request.POST.gorsel_not }}"
+    >
+
+    <input
+        type="number"
+        min="1"
+        max="99"
+        name="gorsel_saat"
+        placeholder="Ders saati"
+        value="{{ request.POST.gorsel_saat }}"
+    >
+</div>
+
+<div class="ders">
+    <label>Bilgisayar Bilimi</label>
+
+    <input
+        type="number"
+        step="0.01"
+        min="0"
+        max="100"
+        name="bilgisayar_not"
+        placeholder="Not"
+        value="{{ request.POST.bilgisayar_not }}"
+    >
+
+    <input
+        type="number"
+        min="1"
+        max="99"
+        name="bilgisayar_saat"
+        placeholder="Ders saati"
+        value="{{ request.POST.bilgisayar_saat }}"
+    >
+</div>
+
+<div class="ders">
+    <label>Psikoloji</label>
+
+    <input
+        type="number"
+        step="0.01"
+        min="0"
+        max="100"
+        name="psikoloji_not"
+        placeholder="Not"
+        value="{{ request.POST.psikoloji_not }}"
+    >
+
+    <input
+        type="number"
+        min="1"
+        max="99"
+        name="psikoloji_saat"
+        placeholder="Ders saati"
+        value="{{ request.POST.psikoloji_saat }}"
+    >
+</div>
+
+<div class="ders">
+    <label>Sosyoloji</label>
+
+    <input
+        type="number"
+        step="0.01"
+        min="0"
+        max="100"
+        name="sosyoloji_not"
+        placeholder="Not"
+        value="{{ request.POST.sosyoloji_not }}"
+    >
+
+    <input
+        type="number"
+        min="1"
+        max="99"
+        name="sosyoloji_saat"
+        placeholder="Ders saati"
+        value="{{ request.POST.sosyoloji_saat }}"
+    >
+  
+
+            </div>
+
+            
+            <button type="submit">📊 Hesapla</button>
+
+            <button type="button" onclick="temizle()">
+                 🗑️ Temizle
+            </button>
+
+        </form>
+
+        {% if belge %}
+
+<div class="sonuc" id="sonuc-kutusu">
+
+    {% if sonuc %}
+        <h2>📊 Ortalama: {{ sonuc }}</h2>
+    {% endif %}
+
+    <h2>{{ belge }}</h2>
+
+</div>
+
+{% endif %}
+
+        <!-- {% if sonuc %} 
+
+        <div class="sonuc">
+            <h2>📊 Ortalama: {{ sonuc }}</h2>
+            <h2>{{ belge }}</h2> -->
+
+            <!-- <form method="GET">
+                <button type="submit">
+                    🔄 Tekrar Hesapla
+                </button>
+            </form> -->
+        <!-- </div>
+
+         {% endif %} -->
+
+    </div>
+
+
+
+   
+
+
+    <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const notlar = document.querySelectorAll('input[name$="_not"]');
+        const saatler = document.querySelectorAll('input[name$="_saat"]');
+
+        notlar.forEach(function (input) {
+
+            input.addEventListener("input", function () {
+
+                if (parseFloat(this.value) > 100) {
+                    this.value = 100;
+                }
+
+            });
+
+        });
+
+        saatler.forEach(function (input) {
+
+            input.addEventListener("input", function () {
+
+                if (parseInt(this.value) > 99) {
+                    this.value = 99;
+                }
+
+            });
+
+        });
+
+    });
+
+function temizle() {
+
+        const inputlar = document.querySelectorAll("input");
+
+        inputlar.forEach(function(input) {
+
+            if (input.type !== "hidden") {
+                input.value = "";
+            }
+
+        });
+
+        const sonucKutusu = document.getElementById("sonuc-kutusu");
+
+        if (sonucKutusu) {
+            sonucKutusu.style.display = "none";
+        }
+
+    }   
+    
+//     function temizle() {
+
+//     const inputlar = document.querySelectorAll("input");
+
+//     inputlar.forEach(function(input) {
+
+//         input.value = "";
+
+//     });
+
+// }
+
+</script>
+
+
+</div>
+
+</body>
+
+</html>

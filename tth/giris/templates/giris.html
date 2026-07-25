@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Ana Menü</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body{
+
+            min-height: 100vh;
+
+            background: linear-gradient(
+                135deg,
+                #0f172a,
+                #1e3a8a,
+                #2563eb
+            );
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .container{
+
+            width: 90%;
+            max-width: 1000px;
+            text-align: center;
+        }
+
+        h1{
+
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        p{
+
+            font-size: 20px;
+            color: #dbeafe;
+            margin-bottom: 50px;
+        }
+
+        .kartlar{
+
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .kart{
+
+            width: 320px;
+
+            background: rgba(255,255,255,0.1);
+
+            backdrop-filter: blur(15px);
+
+            border-radius: 25px;
+
+            padding: 35px;
+
+            text-decoration: none;
+
+            color: white;
+
+            transition: 0.3s;
+
+            box-shadow: 0 0 25px rgba(0,0,0,0.25);
+        }
+
+        .kart:hover{
+
+            transform: translateY(-10px) scale(1.03);
+
+            background: rgba(255,255,255,0.18);
+        }
+
+        .ikon{
+
+            font-size: 70px;
+
+            margin-bottom: 20px;
+        }
+
+        .kart h2{
+
+            margin-bottom: 15px;
+        }
+
+        .kart p{
+
+            font-size: 16px;
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 700px){
+
+            h1{
+
+                font-size: 35px;
+            }
+
+            .kart{
+
+                width: 100%;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🎓 Eğitim Platformu</h1>
+
+        <p>İstediğiniz aracı seçin.</p>
+
+        <div class="kartlar">
+
+            <a href="/anasayfa/" class="kart">
+
+                <div class="ikon">🏆</div>
+
+                <h2>Takdir & Teşekkür Hesaplama</h2>
+
+                <p>
+                    Ders notlarını girerek belge durumunu hesapla.
+                </p>
+
+            </a>
+
+            <a href="/yks/" class="kart">
+
+                <div class="ikon">📚</div>
+
+                <h2>YKS Sıralama Ve Puan Hesaplama</h2>
+
+                <p>
+                    Beklediğin sonuçları girerek tahmini puanını ve sıralamanı öğren.
+                </p>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

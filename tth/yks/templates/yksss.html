@@ -1,0 +1,835 @@
+
+    <!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>YKS Tahmin Sistemi</title>
+
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background: linear-gradient(135deg, #0f172a, #1e3a8a, #2563eb);
+        min-height: 100vh;
+        padding: 30px;
+        color: white;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: auto;
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(15px);
+        border-radius: 25px;
+        padding: 35px;
+        box-shadow: 0 0 30px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 15px;
+        font-size: 40px;
+    }
+
+    .aciklama {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #dbeafe;
+        font-size: 18px;
+    }
+
+    .puan-turu {
+        margin-bottom: 25px;
+        text-align: center;
+    }
+
+    select {
+        width: 250px;
+        padding: 12px;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+    }
+
+    .dersler {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .ders {
+        background: rgba(255,255,255,0.08);
+        border-radius: 18px;
+        padding: 20px;
+        transition: 0.3s;
+        margin-bottom: 15px;
+    }
+
+    .ders:hover {
+        transform: translateY(-5px);
+        background: rgba(255,255,255,0.15);
+    }
+
+    .ders h3 {
+        margin-bottom: 15px;
+        color: #bfdbfe;
+    }
+
+    button {
+        width: 100%;
+        padding: 16px;
+        margin-top: 30px;
+        border: none;
+        border-radius: 15px;
+        font-size: 20px;
+        font-weight: bold;
+        background: #2563eb;
+        color: white;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        background: #1d4ed8;
+        transform: scale(1.02);
+    }
+
+    .sonuc {
+        margin-top: 35px;
+        text-align: center;
+        background: rgba(255,255,255,0.12);
+        border-radius: 20px;
+        padding: 25px;
+    }
+
+    .sonuc h2 {
+        margin: 12px 0;
+        font-size: 28px;
+    }
+
+    @media (max-width: 800px) {
+        .dersler {
+            grid-template-columns: 1fr;
+        }
+
+        h1 {
+            font-size: 30px;
+        }
+    }
+
+    .baslik {
+        margin-top: 40px;
+        margin-bottom: 15px;
+        color: #bfdbfe;
+        border-left: 5px solid #2563eb;
+        padding-left: 12px;
+    }
+
+    .inputs {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+    }
+
+.inputs input {
+    width: 90%;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+}
+
+    /* .inputs input {
+        padding: 10px;
+        border-radius: 10px;
+        border: none;
+    } */
+
+    .inputs input[readonly] {
+        background: #dbeafe;
+        color: #1e3a8a;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .butonlar {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .butonlar button {
+        flex: 1;
+    }
+
+    .uyari{
+    color:#ff5b5b;
+    font-size:14px;
+    font-weight:bold;
+    margin-top:8px;
+    min-height:18px;
+}
+
+    </style>
+
+
+
+
+
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>🎓 YKS Puan ve Sıralama Tahmini</h1>
+        
+        <form method="POST" id="yksForm">
+            {% csrf_token %}
+            
+            <div class="puan-turu">
+                <h3>Puan Türü</h3>
+                <select name="puan_turu">
+                    <option value="say" {% if request.POST.puan_turu == 'say' %}selected{% endif %}>Sayısal</option>
+                    <option value="ea" {% if request.POST.puan_turu == 'ea' %}selected{% endif %}>Eşit Ağırlık</option>
+                    <option value="soz" {% if request.POST.puan_turu == 'soz' %}selected{% endif %}>Sözel</option>
+                </select>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h3>OBP</h3>
+                <input
+                    type="number"
+                    name="obp"
+                    placeholder="OBP (0-100)"
+                    min="0"
+                    max="100"
+                    step="0.01"
+                    value="{{ request.POST.obp }}"
+                    style="padding: 10px; border-radius: 10px; border: none; width: 250px; margin-top: 5px;"
+                >
+            </div>
+            
+           <!-- ================= TYT ================= -->
+<!-- ================= TYT ================= -->
+
+<h2 class="baslik">TYT Dersleri</h2>
+
+<div class="dersler">
+
+    <!-- Türkçe -->
+    <div class="ders">
+        <h3>Türkçe (40)</h3>
+        <div class="inputs">
+            <input type="number" name="turkce_dogru" placeholder="Doğru" min="0" max="40" value="{{ request.POST.turkce_dogru }}">
+            <input type="number" name="turkce_yanlis" placeholder="Yanlış" min="0" max="40" value="{{ request.POST.turkce_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <!-- Sosyal Bilgiler -->
+    <div class="ders">
+        <h3>Sosyal Bilgiler (20)</h3>
+        <div class="inputs">
+            <input type="number" name="sosyal_dogru" placeholder="Doğru" min="0" max="20" value="{{ request.POST.sosyal_dogru }}">
+            <input type="number" name="sosyal_yanlis" placeholder="Yanlış" min="0" max="20" value="{{ request.POST.sosyal_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <!-- Matematik -->
+    <div class="ders">
+        <h3>Matematik (40)</h3>
+        <div class="inputs">
+            <input type="number" name="matematik_dogru" placeholder="Doğru" min="0" max="40" value="{{ request.POST.matematik_dogru }}">
+            <input type="number" name="matematik_yanlis" placeholder="Yanlış" min="0" max="40" value="{{ request.POST.matematik_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <!-- Fen Bilimleri -->
+    <div class="ders">
+        <h3>Fen Bilimleri (20)</h3>
+        <div class="inputs">
+            <input type="number" name="fen_dogru" placeholder="Doğru" min="0" max="20" value="{{ request.POST.fen_dogru }}">
+            <input type="number" name="fen_yanlis" placeholder="Yanlış" min="0" max="20" value="{{ request.POST.fen_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+</div>
+
+
+           
+<!-- <h2 class="baslik">TYT Dersleri</h2>
+
+<div class="dersler">
+
+    <div class="ders">
+        <h3>Türkçe</h3>
+        <div class="inputs">
+            <input type="number" name="turkce_dogru" placeholder="Doğru" value="{{ request.POST.turkce_dogru }}">
+            <input type="number" name="turkce_yanlis" placeholder="Yanlış" value="{{ request.POST.turkce_yanlis }}">
+            <input type="text" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <div class="ders">
+        <h3>Sosyal Bilgiler</h3>
+        <div class="inputs">
+            <input type="number" name="sosyal_dogru" placeholder="Doğru" value="{{ request.POST.sosyal_dogru }}">
+            <input type="number" name="sosyal_yanlis" placeholder="Yanlış" value="{{ request.POST.sosyal_yanlis }}">
+            <input type="text" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <div class="ders">
+        <h3>Matematik</h3>
+        <div class="inputs">
+            <input type="number" name="matematik_dogru" placeholder="Doğru" value="{{ request.POST.matematik_dogru }}">
+            <input type="number" name="matematik_yanlis" placeholder="Yanlış" value="{{ request.POST.matematik_yanlis }}">
+            <input type="text" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <div class="ders">
+        <h3>Fen Bilimleri</h3>
+        <div class="inputs">
+            <input type="number" name="fen_dogru" placeholder="Doğru" value="{{ request.POST.fen_dogru }}">
+            <input type="number" name="fen_yanlis" placeholder="Yanlış" value="{{ request.POST.fen_yanlis }}">
+            <input type="text" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+</div> -->
+
+<!-- ================= AYT SAYISAL ================= -->
+ <!-- ================= AYT SAYISAL ================= -->
+
+
+ <h2 class="baslik">AYT Sayısal</h2>
+
+<div class="dersler" id="sayisal">
+
+    <!-- Matematik -->
+    <div class="ders">
+        <h3>Matematik (40)</h3>
+        <div class="inputs">
+            <input type="number" name="ayt_matematik_dogru" placeholder="Doğru" min="0" max="40" value="{{ request.POST.ayt_matematik_dogru }}">
+            <input type="number" name="ayt_matematik_yanlis" placeholder="Yanlış" min="0" max="40" value="{{ request.POST.ayt_matematik_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <!-- Fizik -->
+    
+</div>
+<!-- <h2 class="baslik">AYT Sayısal</h2>
+
+<div class="dersler"> -->
+
+    <!-- Matematik -->
+    <!-- <div class="ders">
+        <h3>Matematik (40)</h3>
+        <div class="inputs">
+            <input type="number" name="ayt_matematik_dogru" placeholder="Doğru" min="0" max="40" value="{{ request.POST.ayt_matematik_dogru }}">
+            <input type="number" name="ayt_matematik_yanlis" placeholder="Yanlış" min="0" max="40" value="{{ request.POST.ayt_matematik_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div> -->
+
+    <!-- Fizik -->
+    <div class="ders">
+        <h3>Fizik (14)</h3>
+        <div class="inputs">
+            <input type="number" name="fizik_dogru" placeholder="Doğru" min="0" max="14" value="{{ request.POST.fizik_dogru }}">
+            <input type="number" name="fizik_yanlis" placeholder="Yanlış" min="0" max="14" value="{{ request.POST.fizik_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <!-- Kimya -->
+    <div class="ders">
+        <h3>Kimya (13)</h3>
+        <div class="inputs">
+            <input type="number" name="kimya_dogru" placeholder="Doğru" min="0" max="13" value="{{ request.POST.kimya_dogru }}">
+            <input type="number" name="kimya_yanlis" placeholder="Yanlış" min="0" max="13" value="{{ request.POST.kimya_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <!-- Biyoloji -->
+    <div class="ders">
+        <h3>Biyoloji (13)</h3>
+        <div class="inputs">
+            <input type="number" name="biyoloji_dogru" placeholder="Doğru" min="0" max="13" value="{{ request.POST.biyoloji_dogru }}">
+            <input type="number" name="biyoloji_yanlis" placeholder="Yanlış" min="0" max="13" value="{{ request.POST.biyoloji_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+</div>
+
+<!-- <h2 class="baslik">AYT Sayısal</h2>
+
+<div class="dersler">
+
+    <div class="ders">
+        <h3>Matematik</h3>
+        <div class="inputs">
+            <input type="number" name="ayt_matematik_dogru" placeholder="Doğru" value="{{ request.POST.ayt_matematik_dogru }}">
+            <input type="number" name="ayt_matematik_yanlis" placeholder="Yanlış" value="{{ request.POST.ayt_matematik_yanlis }}">
+            <input type="text" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <div class="ders">
+        <h3>Fizik</h3>
+        <div class="inputs">
+            <input type="number" name="fizik_dogru" placeholder="Doğru" value="{{ request.POST.fizik_dogru }}">
+            <input type="number" name="fizik_yanlis" placeholder="Yanlış" value="{{ request.POST.fizik_yanlis }}">
+            <input type="text" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <div class="ders">
+        <h3>Kimya</h3>
+        <div class="inputs">
+            <input type="number" name="kimya_dogru" placeholder="Doğru" value="{{ request.POST.kimya_dogru }}">
+            <input type="number" name="kimya_yanlis" placeholder="Yanlış" value="{{ request.POST.kimya_yanlis }}">
+            <input type="text" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <div class="ders">
+        <h3>Biyoloji</h3>
+        <div class="inputs">
+            <input type="number" name="biyoloji_dogru" placeholder="Doğru" value="{{ request.POST.biyoloji_dogru }}">
+            <input type="number" name="biyoloji_yanlis" placeholder="Yanlış" value="{{ request.POST.biyoloji_yanlis }}">
+            <input type="text" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+</div> -->
+
+<!-- ================= AYT EŞİT AĞIRLIK ================= -->
+<!-- ================= AYT EŞİT AĞIRLIK ================= -->
+<div id="eaBolumu">
+
+    <h2 class="baslik">AYT Eşit Ağırlık</h2>
+
+    <div class="dersler">
+
+        <!-- Matematik -->
+        <div class="ders">
+            <h3>Matematik (40)</h3>
+            <div class="inputs">
+                <input type="number" name="ayt_matematik_dogru" placeholder="Doğru" min="0" max="40" value="{{ request.POST.ayt_matematik_dogru }}">
+                <input type="number" name="ayt_matematik_yanlis" placeholder="Yanlış" min="0" max="40" value="{{ request.POST.ayt_matematik_yanlis }}">
+                <input type="text" class="net" placeholder="Net" readonly>
+            </div>
+            <div class="uyari"></div>
+        </div>
+
+        <!-- Buraya Edebiyat, Tarih-1, Coğrafya-1 vb. dersler gelecek -->
+
+    </div>
+
+</div>
+<!-- <h2 class="baslik">AYT Eşit Ağırlık</h2>
+
+<div class="dersler"> -->
+
+    <!-- Matematik -->
+    <!-- <div class="ders">
+        <h3>Matematik (40)</h3>
+        <div class="inputs">
+            <input type="number" name="ayt_matematik_dogru" placeholder="Doğru" min="0" max="40" value="{{ request.POST.ayt_matematik_dogru }}">
+            <input type="number" name="ayt_matematik_yanlis" placeholder="Yanlış" min="0" max="40" value="{{ request.POST.ayt_matematik_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div> -->
+
+    <!-- Edebiyat -->
+    <div class="ders">
+        <h3>Edebiyat (24)</h3>
+        <div class="inputs">
+            <input type="number" name="ayt_edebiyat_dogru" placeholder="Doğru" min="0" max="24" value="{{ request.POST.ayt_edebiyat_dogru }}">
+            <input type="number" name="ayt_edebiyat_yanlis" placeholder="Yanlış" min="0" max="24" value="{{ request.POST.ayt_edebiyat_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <!-- Tarih-1 -->
+    <div class="ders">
+        <h3>Tarih-1 (10)</h3>
+        <div class="inputs">
+            <input type="number" name="ayt_tarih1_dogru" placeholder="Doğru" min="0" max="10" value="{{ request.POST.ayt_tarih1_dogru }}">
+            <input type="number" name="ayt_tarih1_yanlis" placeholder="Yanlış" min="0" max="10" value="{{ request.POST.ayt_tarih1_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <!-- Coğrafya-1 -->
+    <div class="ders">
+        <h3>Coğrafya-1 (6)</h3>
+        <div class="inputs">
+            <input type="number" name="ayt_cografya1_dogru" placeholder="Doğru" min="0" max="6" value="{{ request.POST.ayt_cografya1_dogru }}">
+            <input type="number" name="ayt_cografya1_yanlis" placeholder="Yanlış" min="0" max="6" value="{{ request.POST.ayt_cografya1_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+</div>
+
+
+<!-- <h2 class="baslik">AYT Eşit Ağırlık</h2>
+
+<div class="ders">
+    <h3>Matematik (40)</h3>
+
+    <div class="inputs">
+
+        <input type="number"
+               name="ayt_matematik_dogru"
+               placeholder="Doğru"
+               value="{{ request.POST.ayt_matematik_dogru }}">
+
+        <input type="number"
+               name="ayt_matematik_yanlis"
+               placeholder="Yanlış"
+               value="{{ request.POST.ayt_matematik_yanlis }}">
+
+        <input type="text" placeholder="Net" readonly>
+
+    </div>
+    <div class="uyari"></div>
+</div>
+
+<div class="dersler">
+
+    <div class="ders">
+        <h3>Edebiyat</h3>
+        <div class="inputs">
+            <input type="number" name="edebiyat_dogru" placeholder="Doğru" value="{{ request.POST.edebiyat_dogru }}">
+            <input type="number" name="edebiyat_yanlis" placeholder="Yanlış" value="{{ request.POST.edebiyat_yanlis }}">
+            <input type="text" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <div class="ders">
+        <h3>Tarih-1</h3>
+        <div class="inputs">
+            <input type="number" name="tarih1_dogru" placeholder="Doğru" value="{{ request.POST.tarih1_dogru }}">
+            <input type="number" name="tarih1_yanlis" placeholder="Yanlış" value="{{ request.POST.tarih1_yanlis }}">
+            <input type="text" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <div class="ders">
+        <h3>Coğrafya-1</h3>
+        <div class="inputs">
+            <input type="number" name="cografya1_dogru" placeholder="Doğru" value="{{ request.POST.cografya1_dogru }}">
+            <input type="number" name="cografya1_yanlis" placeholder="Yanlış" value="{{ request.POST.cografya1_yanlis }}">
+            <input type="text" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+</div> -->
+
+<!-- ================= AYT SÖZEL ================= -->
+
+<h2 class="baslik">AYT Sözel</h2>
+
+<div class="dersler">
+
+    <!-- Edebiyat -->
+    <div class="ders">
+        <h3>Edebiyat (24)</h3>
+        <div class="inputs">
+            <input type="number" name="ayt_edebiyat_dogru" placeholder="Doğru" min="0" max="24" value="{{ request.POST.ayt_edebiyat_dogru }}">
+            <input type="number" name="ayt_edebiyat_yanlis" placeholder="Yanlış" min="0" max="24" value="{{ request.POST.ayt_edebiyat_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <!-- Tarih-1 -->
+    <div class="ders">
+        <h3>Tarih-1 (10)</h3>
+        <div class="inputs">
+            <input type="number" name="ayt_tarih1_dogru" placeholder="Doğru" min="0" max="10" value="{{ request.POST.ayt_tarih1_dogru }}">
+            <input type="number" name="ayt_tarih1_yanlis" placeholder="Yanlış" min="0" max="10" value="{{ request.POST.ayt_tarih1_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <!-- Coğrafya-1 -->
+    <div class="ders">
+        <h3>Coğrafya-1 (6)</h3>
+        <div class="inputs">
+            <input type="number" name="ayt_cografya1_dogru" placeholder="Doğru" min="0" max="6" value="{{ request.POST.ayt_cografya1_dogru }}">
+            <input type="number" name="ayt_cografya1_yanlis" placeholder="Yanlış" min="0" max="6" value="{{ request.POST.ayt_cografya1_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <!-- Tarih-2 -->
+    <div class="ders">
+        <h3>Tarih-2 (11)</h3>
+        <div class="inputs">
+            <input type="number" name="ayt_tarih2_dogru" placeholder="Doğru" min="0" max="11" value="{{ request.POST.ayt_tarih2_dogru }}">
+            <input type="number" name="ayt_tarih2_yanlis" placeholder="Yanlış" min="0" max="11" value="{{ request.POST.ayt_tarih2_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <!-- Coğrafya-2 -->
+    <div class="ders">
+        <h3>Coğrafya-2 (11)</h3>
+        <div class="inputs">
+            <input type="number" name="ayt_cografya2_dogru" placeholder="Doğru" min="0" max="11" value="{{ request.POST.ayt_cografya2_dogru }}">
+            <input type="number" name="ayt_cografya2_yanlis" placeholder="Yanlış" min="0" max="11" value="{{ request.POST.ayt_cografya2_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <!-- Felsefe -->
+    <div class="ders">
+        <h3>Felsefe Grubu (12)</h3>
+        <div class="inputs">
+            <input type="number" name="ayt_felsefe_dogru" placeholder="Doğru" min="0" max="12" value="{{ request.POST.ayt_felsefe_dogru }}">
+            <input type="number" name="ayt_felsefe_yanlis" placeholder="Yanlış" min="0" max="12" value="{{ request.POST.ayt_felsefe_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+    <!-- Din -->
+    <div class="ders">
+        <h3>Din Kültürü (6)</h3>
+        <div class="inputs">
+            <input type="number" name="ayt_din_dogru" placeholder="Doğru" min="0" max="6" value="{{ request.POST.ayt_din_dogru }}">
+            <input type="number" name="ayt_din_yanlis" placeholder="Yanlış" min="0" max="6" value="{{ request.POST.ayt_din_yanlis }}">
+            <input type="text" class="net" placeholder="Net" readonly>
+        </div>
+        <div class="uyari"></div>
+    </div>
+
+</div>
+
+
+
+
+<!-- <h2 class="baslik">AYT Sözel</h2>
+
+<div class="dersler">
+
+    <div class="ders">
+        <h3>Tarih-2</h3>
+        <div class="inputs">
+            <input type="number" name="tarih2_dogru" placeholder="Doğru" value="{{ request.POST.tarih2_dogru }}">
+            <input type="number" name="tarih2_yanlis" placeholder="Yanlış" value="{{ request.POST.tarih2_yanlis }}">
+            <input type="text" placeholder="Net" readonly>
+        </div>
+    </div>
+
+    <div class="ders">
+        <h3>Coğrafya-2</h3>
+        <div class="inputs">
+            <input type="number" name="cografya2_dogru" placeholder="Doğru" value="{{ request.POST.cografya2_dogru }}">
+            <input type="number" name="cografya2_yanlis" placeholder="Yanlış" value="{{ request.POST.cografya2_yanlis }}">
+            <input type="text" placeholder="Net" readonly>
+        </div>
+    </div>
+
+    <div class="ders">
+        <h3>Felsefe</h3>
+        <div class="inputs">
+            <input type="number" name="felsefe_dogru" placeholder="Doğru" value="{{ request.POST.felsefe_dogru }}">
+            <input type="number" name="felsefe_yanlis" placeholder="Yanlış" value="{{ request.POST.felsefe_yanlis }}">
+            <input type="text" placeholder="Net" readonly>
+        </div>
+    </div>
+
+    <div class="ders">
+        <h3>Din</h3>
+        <div class="inputs">
+            <input type="number" name="din_dogru" placeholder="Doğru" value="{{ request.POST.din_dogru }}">
+            <input type="number" name="din_yanlis" placeholder="Yanlış" value="{{ request.POST.din_yanlis }}">
+            <input type="text" placeholder="Net" readonly>
+        </div>
+    </div>
+
+</div>   -->
+
+            {% if puan %}
+            <div class="sonuc">
+                <h2>🎯 Tahmini Puan: {{ puan }}</h2>
+                <h2>🏆 Tahmini Sıralama: {{ siralama }}</h2>
+            </div>
+            {% endif %}
+
+            {% if hata %}
+            <div class="sonuc">
+                <h2>{{ hata }}</h2>
+            </div>
+            {% endif %}
+
+            <div class="butonlar">
+                <button type="submit">Hesapla</button>
+                <button type="button" onclick="temizleForm()">Temizle</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+       function netHesapla() {
+
+    const kutular = document.querySelectorAll(".inputs");
+
+    kutular.forEach(function(kutu){
+
+        const dogru = kutu.children[0];
+        const yanlis = kutu.children[1];
+        const net = kutu.children[2];
+        const uyari = kutu.parentElement.querySelector(".uyari");
+
+        function hesapla(){
+
+            let d = parseFloat(dogru.value) || 0;
+            let y = parseFloat(yanlis.value) || 0;
+
+            const max = parseInt(dogru.max);
+
+            // Her hesaplamada önce uyarıyı temizle
+            uyari.innerHTML = "";
+            dogru.style.border = "";
+            yanlis.style.border = "";
+
+            // İki kutu da boşsa
+            if(dogru.value === "" && yanlis.value === ""){
+                net.value = "";
+                return;
+            }
+
+            // Toplam soru sayısını geçiyorsa
+            if(d + y > max){
+
+                uyari.innerHTML = "⚠ Doğru + Yanlış toplamı " + max + " soruyu geçemez.";
+
+                dogru.style.border = "2px solid #ff4d4d";
+                yanlis.style.border = "2px solid #ff4d4d";
+
+                net.value = "";
+                return;
+            }
+
+            // Net hesapla
+            net.value = (d - (y / 4)).toFixed(2);
+
+        }
+
+        dogru.addEventListener("input", hesapla);
+        yanlis.addEventListener("input", hesapla);
+
+        hesapla();
+
+    });
+
+}
+    // function netHesapla() {
+    //     const kutular = document.querySelectorAll(".inputs");
+
+    //     kutular.forEach(function(kutu) {
+    //         const dogru = kutu.children[0];
+            // const yanlis = kutu.children[1];
+            // const netKutusu = kutu.children[2];
+
+            // function guncelle() {
+            //     const d = parseFloat(dogru.value) || 0;
+            //     const y = parseFloat(yanlis.value) || 0;
+
+                // const net = d - (y / 4);
+
+                // if (dogru.value === "" && yanlis.value === "") {
+                //     netKutusu.value = "";
+                // } else {
+                //     netKutusu.value = net.toFixed(2);
+                // }
+            // }
+
+    //         dogru.addEventListener("input", guncelle);
+    //         yanlis.addEventListener("input", guncelle);
+            
+    //         // Sayfa yüklendiğinde var olan POST verilerine göre netleri hesapla
+    //         guncelle();
+    //     });
+    // }
+
+function temizleForm() {
+
+    // Sayısal inputları temizle
+    document.querySelectorAll("#yksForm input[type='number']").forEach(function(input){
+        input.value = "";
+        input.style.border = "";
+    });
+
+    // Net kutularını temizle
+    document.querySelectorAll(".net").forEach(function(net){
+        net.value = "";
+    });
+
+    // Uyarıları temizle
+    document.querySelectorAll(".uyari").forEach(function(uyari){
+        uyari.innerHTML = "";
+    });
+
+    // Sonuç kutusunu gizle
+    document.querySelectorAll(".sonuc").forEach(function(sonuc){
+        sonuc.remove();
+    });
+
+    // Puan türünü ilk seçeneğe getir
+    document.querySelector("select[name='puan_turu']").selectedIndex = 0;
+
+    // OBP'yi temizle
+    document.querySelector("input[name='obp']").value = "";
+}
+    document.addEventListener("DOMContentLoaded", netHesapla);
+    </script>
+</body>
+</html>
