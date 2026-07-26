@@ -13,7 +13,7 @@ Sitemin ana sayfası aşağıdaki gibidir.
 
 <br>
 
-<img height="250px" src="tth/fotolar/giris1.png" />
+<img height="250px" src="tth/fotolar/giriş1.png" />
 
 <br>
 
@@ -27,7 +27,7 @@ Bu bölümde lise öğrencilerinin gördüğü tüm dersler bulunmaktadır.
 
 <br>
 
-<img height="200px" src="tth/fotolar/tt2.png" />
+<img height="200px" src="tth/fotolar/tt3.png" />
 
 <br>
 
@@ -35,7 +35,7 @@ Bu bölümde lise öğrencilerinin gördüğü tüm dersler bulunmaktadır.
 
 <br>
 
-<img height="200px" src="tth/fotolar/tt3.png" />
+<img height="200px" src="tth/fotolar/tt2.png" />
 
 <br>
 
