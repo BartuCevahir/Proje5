@@ -10,7 +10,7 @@ Bu sitemde lise öğrencileri için takdir-teşekkür hesaplama ve yks öğrenci
 Sitemin anasayfası bu şekilde
 <br>
 
-<img src="fotolar/giris1" alt="Açıklama">
+<img src="fotolar/giris1" alt="">
 <br>
 
 Şimdi takdir-teşekkür hesaplama kısmının içeriği bu şekilde.
@@ -19,17 +19,18 @@ Sitemin anasayfası bu şekilde
 Burda bir lise öğrencisinin gördüğü tüm dersler var.
 <br>
 
-<img src="fotolar/tt1.png" alt="Açıklama">
-<br>
+<img height="200px" src="fotolar/tt1.png" />
 
-<img src="fotolar/tt2.png" alt="Açıklama">
+<br>
+<img height="200px" src="fotolar/tt2.png" />
+
 <br>
 
 
 İhtiyacımız olan dersleri girip hesapla dediğimizde belge durumumuzu görebiliyoruz.
 <br>
 
-<img src="fotolar/tt3.png" alt="Açıklama">
+<img height="200px" src="fotolar/tt3.png" />
 <br>
 
 Şimdi yks kısmının içeriğine bakalım.
@@ -38,10 +39,11 @@ Burda bir lise öğrencisinin gördüğü tüm dersler var.
 Burda bir yks öğrencisinin gördüğü tüm dersler var önemli olan yukarıdan doğru bölümü seçmesi.
 <br>
 
-<img src="fotolar/yks2.png" alt="Açıklama">
+<img height="200px" src="fotolar/yks2.png" />
+
 <br>
 
-<img src="fotolar/yks1.png" alt="Açıklama">
+<img height="200px" src="fotolar/yks1.png" />
 
 <br>
 
