@@ -27,7 +27,7 @@ Bu bölümde lise öğrencilerinin gördüğü tüm dersler bulunmaktadır.
 
 <br>
 
-<img height="200px" src="tth/fotolar/tt3.png" />
+<img height="200px" src="tth/fotolar/tt2.png" />
 
 <br>
 
@@ -35,7 +35,7 @@ Bu bölümde lise öğrencilerinin gördüğü tüm dersler bulunmaktadır.
 
 <br>
 
-<img height="200px" src="tth/fotolar/tt2.png" />
+<img height="200px" src="tth/fotolar/tt3.png" />
 
 <br>
 
@@ -51,7 +51,7 @@ Daha sonra TYT ve AYT derslerine ait doğru ve yanlış sayılarını girerek ta
 
 <br>
 
-<img height="200px" src="tth/fotolar/yks1.png" />
+<img height="200px" src="tth/fotolar/yks3.png" />
 
 <br>
 
@@ -59,7 +59,7 @@ Tüm bilgiler girilip **Hesapla** butonuna basıldığında öğrencinin tahmini
 
 <br>
 
-<img height="200px" src="tth/fotolar/yks3.png" />
+<img height="200px" src="tth/fotolar/yks1.png" />
 
 <br>
 
